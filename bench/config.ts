@@ -1,4 +1,5 @@
 import os from 'node:os';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
@@ -15,6 +16,46 @@ export function cpuCount(): number {
   return typeof fn === 'function' ? fn() : os.cpus().length;
 }
 
+export interface Versions {
+  ossido: string;
+  next: string;
+}
+
+/** The dependency versions each example app is pinned to (for the JSON output). */
+export function readVersions(): Versions {
+  const read = (dir: string): Record<string, string> => {
+    try {
+      const pkg = JSON.parse(readFileSync(resolve(dir, 'package.json'), 'utf8'));
+      return { ...pkg.dependencies, ...pkg.devDependencies };
+    } catch {
+      return {};
+    }
+  };
+  const ossidoDeps = read(OSSIDO_DIR);
+  const nextDeps = read(NEXT_DIR);
+  return {
+    ossido: ossidoDeps['@ossido-labs/ossido'] ?? 'unknown',
+    next: nextDeps.next ?? 'unknown',
+  };
+}
+
+/** The Ossido framework version, stripped of any range prefix (`^`, `~`, …). */
+export function ossidoVersion(): string {
+  return readVersions().ossido.replace(/^[\^~>=<\s]+/, '');
+}
+
+/**
+ * Directory the reports are written to: `results/<ossido-version>/`. Every
+ * generated file (RESULTS.md, results.json, MEMORY.md, memory.json) lives under
+ * the Ossido version it was produced against, so the docs site can fetch
+ * results for a specific version. Any path-unsafe characters in the version are
+ * replaced with `-`.
+ */
+export function resultsDir(): string {
+  const safe = ossidoVersion().replace(/[^0-9A-Za-z.+_-]/g, '-');
+  return resolve(ROOT, 'results', safe);
+}
+
 // Ports. Ossido's port is baked into ossido.config.ts at build time; Next's is
 // passed to the custom server via env. Kept off :3000 so a running `ossido dev`
 // doesn't collide with the benchmark.
@@ -28,6 +69,30 @@ export const WARMUP = Number(process.env.BENCH_WARMUP ?? 3); // seconds, discard
 export const CONNECTIONS = Number(process.env.BENCH_CONNECTIONS ?? 50);
 export const PIPELINING = Number(process.env.BENCH_PIPELINING ?? 1);
 export const TTFB_SAMPLES = Number(process.env.BENCH_TTFB_SAMPLES ?? 30);
+
+// The env vars that override the default benchmark load.
+export const TUNING_ENV_VARS = [
+  'BENCH_DURATION',
+  'BENCH_WARMUP',
+  'BENCH_CONNECTIONS',
+  'BENCH_PIPELINING',
+  'BENCH_TTFB_SAMPLES',
+] as const;
+
+/** Names of the tuning env vars currently set (a non-default, ad-hoc run). */
+export function overriddenEnvVars(): string[] {
+  return TUNING_ENV_VARS.filter((k) => process.env[k] !== undefined);
+}
+
+/**
+ * Whether this run may persist output. Only a default-configuration run writes
+ * the canonical `results/<version>/` files and the README table; any tuning
+ * override (e.g. `bench:quick`) makes the run print-only, so ad-hoc runs never
+ * overwrite the committed, reproducible results.
+ */
+export function outputsEnabled(): boolean {
+  return overriddenEnvVars().length === 0;
+}
 
 export type ThreadMode = 'single' | 'multi';
 

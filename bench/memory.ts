@@ -1,14 +1,16 @@
 import os from 'node:os';
 import { execSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import {
   FRAMEWORKS,
   OSSIDO_BINARY,
   NEXT_DIR,
-  ROOT,
+  resultsDir,
+  overriddenEnvVars,
   cpuCount,
+  readVersions,
   CONNECTIONS,
   DURATION,
   WARMUP,
@@ -16,6 +18,7 @@ import {
 } from './config.ts';
 import { startServer } from './servers.ts';
 import { loadTest, type LoadResult } from './load.ts';
+import { updateReadmeTable } from './index.ts';
 
 // The route used for the memory sweep. /ssr gives steady, high throughput and a
 // realistic per-request render+serialize workload (unlike /api which never
@@ -296,6 +299,41 @@ async function writeMemoryReport(records: MemRecord[], cores: number, outPath: s
   await writeFile(outPath, L.join('\n'));
 }
 
+/**
+ * Machine-readable memory-efficiency results for the docs site. Stable,
+ * self-describing shape (bump `schema` on any breaking change).
+ */
+async function writeMemoryJson(records: MemRecord[], cores: number, outPath: string): Promise<void> {
+  const json = {
+    schema: 'ossido-benchmark/memory@1',
+    generatedAt: new Date().toISOString(),
+    environment: {
+      host: `${os.type()} ${os.release()} · ${os.arch()}`,
+      cpu: os.cpus()[0]?.model ?? 'unknown',
+      cores,
+      totalMemGb: Number((os.totalmem() / 1024 ** 3).toFixed(1)),
+    },
+    versions: readVersions(),
+    load: {
+      connections: CONNECTIONS,
+      durationSec: DURATION,
+      warmupSec: WARMUP,
+      route: MEM_PATH,
+    },
+    levels: levels(cores),
+    results: records.map((r) => ({
+      framework: r.framework,
+      parallelism: r.parallelism,
+      idleRssMb: Number(r.idleRssMb.toFixed(1)),
+      meanRssMb: Number(r.meanRssMb.toFixed(1)),
+      peakRssMb: Number(r.peakRssMb.toFixed(1)),
+      rps: r.load.rps,
+      reqPerMb: Number((r.load.rps / r.meanRssMb).toFixed(2)),
+    })),
+  };
+  await writeFile(outPath, JSON.stringify(json, null, 2) + '\n');
+}
+
 async function main(): Promise<void> {
   ensureBuilt();
   const cores = cpuCount();
@@ -318,9 +356,24 @@ async function main(): Promise<void> {
     }
   }
 
-  const outPath = resolve(ROOT, 'MEMORY.md');
-  await writeMemoryReport(records, cores, outPath);
-  console.log(`\n✔ Report written to ${outPath}`);
+  const overrides = overriddenEnvVars();
+  if (overrides.length) {
+    console.log(
+      `\n⚠ Non-default load (${overrides.join(', ')} set) — skipping output. ` +
+        'Results above are for inspection only; run with defaults to update ' +
+        'results/<version>/ and the README table.',
+    );
+    return;
+  }
+
+  const dir = resultsDir();
+  mkdirSync(dir, { recursive: true });
+  const mdPath = resolve(dir, 'MEMORY.md');
+  const jsonPath = resolve(dir, 'memory.json');
+  await writeMemoryReport(records, cores, mdPath);
+  await writeMemoryJson(records, cores, jsonPath);
+  updateReadmeTable();
+  console.log(`\n✔ Reports written to ${mdPath} and ${jsonPath}`);
 }
 
 main().catch((err) => {

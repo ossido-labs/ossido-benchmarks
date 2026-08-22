@@ -1,5 +1,5 @@
 import { writeFile } from 'node:fs/promises';
-import { LOAD_SCENARIOS, STREAM_SCENARIO, type ThreadMode } from './config.ts';
+import { LOAD_SCENARIOS, STREAM_SCENARIO, type ThreadMode, type Versions } from './config.ts';
 import type { LoadRecord, StreamRecord } from './run.ts';
 
 export interface BenchReport {
@@ -10,6 +10,8 @@ export interface BenchReport {
   totalMemGb: number;
   connections: number;
   durationSec: number;
+  warmupSec: number;
+  versions: Versions;
   loadRecords: LoadRecord[];
   streamRecords: StreamRecord[];
 }
@@ -82,6 +84,7 @@ export async function writeReport(report: BenchReport, outPath: string): Promise
   p(`| CPU | ${report.cpuModel} |`);
   p(`| Logical cores | ${cores} |`);
   p(`| Memory | ${report.totalMemGb} GB |`);
+  p(`| Versions | Ossido ${report.versions.ossido}, Next.js ${report.versions.next} |`);
   p(
     `| Load | ${report.connections} connections, ${report.durationSec}s per scenario ` +
       `(heavy-table render uses fewer — see per-scenario \`Conns\` below) |`,
@@ -210,4 +213,55 @@ export async function writeReport(report: BenchReport, outPath: string): Promise
   p();
 
   await writeFile(outPath, lines.join('\n'));
+}
+
+/**
+ * Machine-readable results for the docs site. Stable, self-describing shape
+ * (bump `schema` on any breaking change). Mirrors RESULTS.md but as data.
+ */
+export async function writeResultsJson(report: BenchReport, outPath: string): Promise<void> {
+  const json = {
+    schema: 'ossido-benchmark/results@1',
+    generatedAt: report.generatedAt,
+    environment: {
+      host: report.host,
+      cpu: report.cpuModel,
+      cores: report.cores,
+      totalMemGb: report.totalMemGb,
+    },
+    versions: report.versions,
+    load: {
+      connections: report.connections,
+      durationSec: report.durationSec,
+      warmupSec: report.warmupSec,
+    },
+    scenarios: [...LOAD_SCENARIOS, STREAM_SCENARIO].map((s) => ({
+      key: s.key,
+      title: s.title,
+      path: s.path,
+      note: s.note,
+    })),
+    results: report.loadRecords.map((r) => ({
+      framework: r.framework,
+      mode: r.mode,
+      threads: r.threads,
+      scenario: r.scenario,
+      connections: r.result.connections,
+      rps: r.result.rps,
+      latencyMeanMs: r.result.latencyMean,
+      latencyP50Ms: r.result.latencyP50,
+      latencyP99Ms: r.result.latencyP99,
+      throughputMbps: r.result.throughputMbps,
+      errors: r.result.errors,
+    })),
+    streaming: report.streamRecords.map((r) => ({
+      framework: r.framework,
+      mode: r.mode,
+      threads: r.threads,
+      ttfbMs: r.result.ttfbMs,
+      totalMs: r.result.totalMs,
+      bytes: r.result.bytes,
+    })),
+  };
+  await writeFile(outPath, JSON.stringify(json, null, 2) + '\n');
 }

@@ -9,7 +9,8 @@
     "bench:build": "bun run bench/build.ts",
     "bench:all": "bun run bench/run.ts --build",
     "bench:quick": "BENCH_DURATION=3 BENCH_WARMUP=1 BENCH_CONNECTIONS=20 bun run bench/run.ts",
-    "bench:memory": "bun run bench/memory.ts"
+    "bench:memory": "bun run bench/memory.ts",
+    "bench:index": "bun run bench/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",

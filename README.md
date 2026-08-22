@@ -15,8 +15,7 @@
   </p>
 
   <p>
-    <a href="./RESULTS.md">Throughput results</a> ·
-    <a href="./MEMORY.md">Memory efficiency</a> ·
+    <a href="./results">Results</a> ·
     <a href="https://ossido.dev">Ossido docs</a>
   </p>
 </div>
@@ -24,9 +23,18 @@
 ---
 
 Both apps live in `examples/` and render **byte-for-byte identical React trees
-from identical data**, so the numbers reflect the runtime, not the workload. The
-latest results are written to [`RESULTS.md`](./RESULTS.md) (throughput/latency)
-and [`MEMORY.md`](./MEMORY.md) (memory efficiency).
+from identical data**, so the numbers reflect the runtime, not the workload.
+Results are written under [`results/<ossido-version>/`](./results) — one folder
+per Ossido release — as Markdown (`RESULTS.md`, `MEMORY.md`) plus machine-readable
+JSON (`results.json`, `memory.json`).
+
+## Benchmark results
+
+<!-- BENCH_TABLE:START -->
+| Ossido version | Next version | Throughput result | Memory result |
+| --- | --- | --- | --- |
+| `0.1.8-beta.20260822040659Z` | `16.3.2` | [RESULTS.md](./results/0.1.8-beta.20260822040659Z/RESULTS.md) · [json](./results/0.1.8-beta.20260822040659Z/results.json) | [MEMORY.md](./results/0.1.8-beta.20260822040659Z/MEMORY.md) · [json](./results/0.1.8-beta.20260822040659Z/memory.json) |
+<!-- BENCH_TABLE:END -->
 
 ## What it measures
 
@@ -34,12 +42,12 @@ Four matched routes exist in both apps (`examples/ossido/src/routes/*` and
 `examples/next/src/app/*`), sharing the identical components in each app's
 `src/bench/` directory:
 
-| Route | Scenario | What it stresses |
-| --- | --- | --- |
-| `/ssr` | 60 product cards, rendered per request | Typical SSR page |
-| `/heavy` | 5000-row table, rendered per request | CPU-bound SSR (where a render pool pays off) |
-| `/stream` | Shell first, then a 3000-row table streamed in | Streaming SSR / time-to-first-byte |
-| `/api/bench` | 100-item JSON payload | Backend request path (Rust/axum vs Node) |
+| Route        | Scenario                                       | What it stresses                             |
+|--------------|------------------------------------------------|----------------------------------------------|
+| `/ssr`       | 60 product cards, rendered per request         | Typical SSR page                             |
+| `/heavy`     | 5000-row table, rendered per request           | CPU-bound SSR (where a render pool pays off) |
+| `/stream`    | Shell first, then a 3000-row table streamed in | Streaming SSR / time-to-first-byte           |
+| `/api/bench` | 100-item JSON payload                          | Backend request path (Rust/axum vs Node)     |
 
 Each is run in two configurations:
 
@@ -64,18 +72,35 @@ bun install
 # Build both apps (Ossido: JS assets + `cargo build --release`; Next: `next build`)
 bun run bench:build
 
-# Run the benchmark and (re)generate RESULTS.md
+# Run the benchmark → results/<ossido-version>/{RESULTS.md,results.json}
 bun run bench
 
 # …or build and run in one step
 bun run bench:all
 
-# Quick, low-fidelity smoke run (short duration, fewer connections)
+# Quick, low-fidelity smoke run (print-only — writes no output files)
 bun run bench:quick
 
-# Memory-efficiency sweep → writes MEMORY.md
+# Memory-efficiency sweep → results/<ossido-version>/{MEMORY.md,memory.json}
 bun run bench:memory
 ```
+
+### Output files
+
+Each run writes a human-readable Markdown report **and** a machine-readable JSON
+sibling (both committed), under `results/<ossido-version>/` so every Ossido
+release keeps its own results:
+
+```
+results/
+  <ossido-version>/
+    RESULTS.md   results.json    # throughput / latency / streaming (bun run bench)
+    MEMORY.md    memory.json     # memory efficiency (bun run bench:memory)
+```
+
+The JSON is self-describing (`schema` field — `ossido-benchmark/results@1` /
+`ossido-benchmark/memory@1`) and carries the environment, framework versions,
+load parameters, and one record per (framework × config × scenario).
 
 ## Memory efficiency
 
@@ -87,21 +112,26 @@ by forking *N* full Node.js processes (one heap each).
 The sweep runs identical `/ssr` load at each parallelism level (1, 2, 4, …,
 cores), samples the resident memory (RSS) of the **entire server process group**
 every 250ms during the load, and reports **req/s per MB**. Results, tables and
-charts land in [`MEMORY.md`](./MEMORY.md).
+charts land in the version's `MEMORY.md` under [`results/`](./results).
 
 ### Tuning
 
 Environment variables (all optional) control the load:
 
-| Variable | Default | Meaning |
-| --- | --- | --- |
-| `BENCH_DURATION` | `10` | Measured seconds per scenario |
-| `BENCH_WARMUP` | `3` | Warm-up seconds (discarded) per scenario |
-| `BENCH_CONNECTIONS` | `50` | Concurrent connections |
-| `BENCH_PIPELINING` | `1` | Requests pipelined per connection |
-| `BENCH_TTFB_SAMPLES` | `30` | Samples for the streaming TTFB probe |
+| Variable             | Default | Meaning                                  |
+|----------------------|---------|------------------------------------------|
+| `BENCH_DURATION`     | `10`    | Measured seconds per scenario            |
+| `BENCH_WARMUP`       | `3`     | Warm-up seconds (discarded) per scenario |
+| `BENCH_CONNECTIONS`  | `50`    | Concurrent connections                   |
+| `BENCH_PIPELINING`   | `1`     | Requests pipelined per connection        |
+| `BENCH_TTFB_SAMPLES` | `30`    | Samples for the streaming TTFB probe     |
 
 Example: `BENCH_DURATION=20 BENCH_CONNECTIONS=100 bun run bench`.
+
+> **Setting any of these makes the run print-only.** The committed
+> `results/<version>/` files and the README table are only written by a
+> **default-configuration** run, so an ad-hoc/tuned run never overwrites the
+> canonical, reproducible results.
 
 ## How it works
 
@@ -111,12 +141,15 @@ bench/
   build.ts     production builds for both apps
   servers.ts   start/stop each server (Ossido binary; Next cluster server)
   load.ts      autocannon load test + streaming TTFB probe
-  report.ts    renders RESULTS.md (tables + mermaid charts)
-  run.ts       orchestrator (throughput/latency → RESULTS.md)
-  memory.ts    memory-efficiency sweep (req/s per MB → MEMORY.md)
+  report.ts    renders RESULTS.md + results.json (tables + mermaid charts)
+  run.ts       orchestrator → results/<ossido-version>/{RESULTS.md,results.json}
+  memory.ts    memory sweep → results/<ossido-version>/{MEMORY.md,memory.json}
+  index.ts     rebuilds the results table in this README (bun run bench:index)
 examples/
   ossido/      Ossido app (Rust page handlers + React routes)
   next/        Next.js app (App Router); server.mjs is the clustered prod server
+results/
+  <ossido-version>/  generated reports (Markdown + JSON), one folder per release
 ```
 
 Ports are kept off `:3000` (Ossido on `:4000`, Next.js on `:4100`) so a running

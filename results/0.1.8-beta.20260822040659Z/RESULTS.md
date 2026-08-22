@@ -10,45 +10,46 @@
 
 | | |
 | --- | --- |
-| Date | 2026-08-22T04:19:50.987Z |
+| Date | 2026-08-22T15:01:57.051Z |
 | Host | Darwin 25.5.0 · arm64 |
 | CPU | Apple M4 Max |
 | Logical cores | 16 |
 | Memory | 48 GB |
+| Versions | Ossido 0.1.8-beta.20260822040659Z, Next.js 16.3.2 |
 | Load | 50 connections, 10s per scenario (heavy-table render uses fewer — see per-scenario `Conns` below) |
 
 ## Throughput (req/s — higher is better)
 
 | Scenario | Ossido ×1 | Ossido ×16 | Next ×1 | Next ×16 |
 | --- | ---: | ---: | ---: | ---: |
-| SSR — catalogue | 2,134 | 8,866 | 610 | 4,228 |
-| SSR — heavy table | 23 | 112 | 5 | 72 |
-| JSON API | 102,458 | 101,235 | 8,209 | 44,579 |
+| SSR — catalogue | 2,157 | 8,855 | 581 | 4,090 |
+| SSR — heavy table | 23 | 105 | 4 | 61 |
+| JSON API | 97,574 | 98,048 | 8,298 | 37,142 |
 
 ## p99 latency (ms — lower is better)
 
 | Scenario | Ossido ×1 | Ossido ×16 | Next ×1 | Next ×16 |
 | --- | ---: | ---: | ---: | ---: |
-| SSR — catalogue | 26.0 | 13.0 | 104.0 | 27.0 |
-| SSR — heavy table | 2,307.0 | 484.0 | 9,818.0 | 943.0 |
-| JSON API | 1.0 | 1.0 | 11.0 | 5.0 |
+| SSR — catalogue | 25.0 | 13.0 | 102.0 | 44.0 |
+| SSR — heavy table | 2,351.0 | 459.0 | 9,352.0 | 1,190.0 |
+| JSON API | 1.0 | 1.0 | 11.0 | 6.0 |
 
 ## Detailed metrics
 
 | Scenario | Config | Conns | req/s | p50 (ms) | p99 (ms) | Throughput (MB/s) | Errors |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| SSR — catalogue | Ossido (1 thread) | 50 | 2,134 | 23.00 | 26.00 | 80.5 | 0 |
-| SSR — catalogue | Ossido (16 threads) | 50 | 8,866 | 5.00 | 13.00 | 334.6 | 0 |
-| SSR — catalogue | Next.js (1 process) | 50 | 610 | 79.00 | 104.00 | 63.9 | 0 |
-| SSR — catalogue | Next.js (16 processes) | 50 | 4,228 | 10.00 | 27.00 | 442.7 | 0 |
-| SSR — heavy table | Ossido (1 thread) | 32 | 23 | 1,216.00 | 2,307.00 | 63.2 | 0 |
-| SSR — heavy table | Ossido (16 threads) | 32 | 112 | 278.00 | 484.00 | 307.7 | 0 |
-| SSR — heavy table | Next.js (1 process) | 32 | 5 | 2,327.00 | 9,818.00 | 34.1 | 0 |
-| SSR — heavy table | Next.js (16 processes) | 32 | 72 | 429.00 | 943.00 | 531.5 | 0 |
-| JSON API | Ossido (1 thread) | 50 | 102,458 | 0.00 | 1.00 | 1,093.9 | 0 |
-| JSON API | Ossido (16 threads) | 50 | 101,235 | 0.00 | 1.00 | 1,080.7 | 0 |
-| JSON API | Next.js (1 process) | 50 | 8,209 | 5.00 | 11.00 | 87.8 | 0 |
-| JSON API | Next.js (16 processes) | 50 | 44,579 | 0.00 | 5.00 | 476.7 | 0 |
+| SSR — catalogue | Ossido (1 thread) | 50 | 2,157 | 22.00 | 25.00 | 81.4 | 0 |
+| SSR — catalogue | Ossido (16 threads) | 50 | 8,855 | 5.00 | 13.00 | 334.1 | 0 |
+| SSR — catalogue | Next.js (1 process) | 50 | 581 | 84.00 | 102.00 | 60.9 | 0 |
+| SSR — catalogue | Next.js (16 processes) | 50 | 4,090 | 8.00 | 44.00 | 428.3 | 0 |
+| SSR — heavy table | Ossido (1 thread) | 32 | 23 | 1,250.00 | 2,351.00 | 61.6 | 0 |
+| SSR — heavy table | Ossido (16 threads) | 32 | 105 | 294.00 | 459.00 | 287.7 | 0 |
+| SSR — heavy table | Next.js (1 process) | 32 | 4 | 2,387.00 | 9,352.00 | 30.4 | 0 |
+| SSR — heavy table | Next.js (16 processes) | 32 | 61 | 489.00 | 1,190.00 | 455.2 | 0 |
+| JSON API | Ossido (1 thread) | 50 | 97,574 | 0.00 | 1.00 | 1,042.0 | 0 |
+| JSON API | Ossido (16 threads) | 50 | 98,048 | 0.00 | 1.00 | 1,046.7 | 0 |
+| JSON API | Next.js (1 process) | 50 | 8,298 | 5.00 | 11.00 | 88.7 | 0 |
+| JSON API | Next.js (16 processes) | 50 | 37,142 | 0.00 | 6.00 | 397.2 | 0 |
 
 ## Charts
 
@@ -61,7 +62,7 @@ xychart-beta
     title "SSR — catalogue — req/s (higher is better)"
     x-axis ["Ossido x1", "Ossido x16", "Next x1", "Next x16"]
     y-axis "req/s"
-    bar [2134.2, 8865.6, 610, 4228]
+    bar [2157.4, 8855.21, 581.21, 4089.9]
 ```
 
 ### SSR — heavy table — throughput
@@ -73,7 +74,7 @@ xychart-beta
     title "SSR — heavy table — req/s (higher is better)"
     x-axis ["Ossido x1", "Ossido x16", "Next x1", "Next x16"]
     y-axis "req/s"
-    bar [23.1, 112.4, 4.6, 71.7]
+    bar [22.5, 105.1, 4.1, 61.4]
 ```
 
 ### JSON API — throughput
@@ -85,7 +86,7 @@ xychart-beta
     title "JSON API — req/s (higher is better)"
     x-axis ["Ossido x1", "Ossido x16", "Next x1", "Next x16"]
     y-axis "req/s"
-    bar [102457.6, 101235.2, 8209.4, 44579.2]
+    bar [97574.4, 98048, 8297.8, 37142.4]
 ```
 
 ### Multi-core scaling (req/s: 1 → 16 threads)
@@ -93,15 +94,15 @@ xychart-beta
 How each framework scales from single-threaded to all cores on the CPU-bound
 heavy-table render.
 
-- **Ossido**: 23 → 112 req/s (**4.87×**)
-- **Next.js**: 5 → 72 req/s (**15.59×**)
+- **Ossido**: 23 → 105 req/s (**4.67×**)
+- **Next.js**: 4 → 61 req/s (**14.98×**)
 
 ```mermaid
 xychart-beta
     title "Heavy-table render — scaling across cores (req/s)"
     x-axis ["Ossido x1", "Ossido x16", "Next x1", "Next x16"]
     y-axis "req/s"
-    bar [23.1, 112.4, 4.6, 71.7]
+    bar [22.5, 105.1, 4.1, 61.4]
 ```
 
 ## Streaming SSR (time-to-first-byte vs full response)
@@ -111,17 +112,17 @@ shell sooner while the server streams the rest.*
 
 | Config | TTFB (ms) | Total (ms) | Streamed after shell (ms) |
 | --- | ---: | ---: | ---: |
-| Ossido (1 thread) | 23.7 | 25.0 | 1.3 |
-| Ossido (16 threads) | 25.2 | 27.0 | 1.7 |
-| Next.js (1 process) | 75.1 | 89.0 | 13.9 |
-| Next.js (16 processes) | 75.8 | 89.5 | 13.6 |
+| Ossido (1 thread) | 24.6 | 26.2 | 1.6 |
+| Ossido (16 threads) | 27.6 | 29.4 | 1.8 |
+| Next.js (1 process) | 75.8 | 89.7 | 13.8 |
+| Next.js (16 processes) | 81.8 | 96.3 | 14.5 |
 
 ```mermaid
 xychart-beta
     title "Streaming — time-to-first-byte (ms, lower is better)"
     x-axis ["Ossido x1", "Ossido x16", "Next x1", "Next x16"]
     y-axis "ms"
-    bar [23.75, 25.24, 75.14, 75.83]
+    bar [24.58, 27.6, 75.83, 81.8]
 ```
 
 ---

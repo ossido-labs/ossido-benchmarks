@@ -1,6 +1,6 @@
 import os from 'node:os';
 import { spawn } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
   FRAMEWORKS,
@@ -10,8 +10,10 @@ import {
   OSSIDO_DIR,
   OSSIDO_BINARY,
   NEXT_DIR,
-  ROOT,
+  resultsDir,
+  overriddenEnvVars,
   cpuCount,
+  readVersions,
   CONNECTIONS,
   DURATION,
   WARMUP,
@@ -20,7 +22,8 @@ import {
 } from './config.ts';
 import { startServer, threadsFor } from './servers.ts';
 import { loadTest, streamProbe, type LoadResult, type StreamResult } from './load.ts';
-import { writeReport, type BenchReport } from './report.ts';
+import { writeReport, writeResultsJson, type BenchReport } from './report.ts';
+import { updateReadmeTable } from './index.ts';
 
 export interface LoadRecord {
   framework: Framework['key'];
@@ -141,13 +144,30 @@ async function main(): Promise<void> {
     totalMemGb: Number((os.totalmem() / 1024 ** 3).toFixed(1)),
     connections: CONNECTIONS,
     durationSec: DURATION,
+    warmupSec: WARMUP,
+    versions: readVersions(),
     loadRecords,
     streamRecords,
   };
 
-  const outPath = resolve(ROOT, 'RESULTS.md');
-  await writeReport(report, outPath);
-  console.log(`\n✔ Report written to ${outPath}`);
+  const overrides = overriddenEnvVars();
+  if (overrides.length) {
+    console.log(
+      `\n⚠ Non-default load (${overrides.join(', ')} set) — skipping output. ` +
+        'Results above are for inspection only; run with defaults to update ' +
+        'results/<version>/ and the README table.',
+    );
+    return;
+  }
+
+  const dir = resultsDir();
+  mkdirSync(dir, { recursive: true });
+  const mdPath = resolve(dir, 'RESULTS.md');
+  const jsonPath = resolve(dir, 'results.json');
+  await writeReport(report, mdPath);
+  await writeResultsJson(report, jsonPath);
+  updateReadmeTable();
+  console.log(`\n✔ Reports written to ${mdPath} and ${jsonPath}`);
 }
 
 main().catch((err) => {
