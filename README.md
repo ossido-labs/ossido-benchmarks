@@ -1,12 +1,32 @@
-# Ossido vs Next.js benchmark
+<div align="center">
+  <a href="https://ossido.dev">
+    <img src="https://raw.githubusercontent.com/ossido-labs/ossido/main/assets/header.png" alt="Ossido" width="100%">
+  </a>
 
-A reproducible performance benchmark comparing [Ossido](https://ossido.dev)
-(React + Rust/axum, with a multi-threaded V8 SSR render pool) against
-[Next.js](https://nextjs.org) (React on Node.js). Both apps live in `examples/`
-and render **byte-for-byte identical React trees from identical data**, so the
-numbers reflect the runtime, not the workload.
+  <h1>Ossido vs Next.js — Benchmark</h1>
 
-The latest results are written to [`RESULTS.md`](./RESULTS.md).
+  <p><strong>A reproducible benchmark pitting <a href="https://ossido.dev">Ossido</a> (React + Rust/axum, multi-threaded V8 SSR render pool) against <a href="https://nextjs.org">Next.js</a> (React on Node.js).</strong></p>
+
+  <p>
+    <a href="https://www.npmjs.com/package/@ossido-labs/ossido"><img src="https://img.shields.io/npm/v/@ossido-labs/ossido?logo=rust&label=ossido&color=E43717" alt="Ossido version"></a>
+    <a href="https://www.npmjs.com/package/next"><img src="https://img.shields.io/npm/v/next?logo=nextdotjs&label=next.js&color=000000" alt="Next.js version"></a>
+    <a href="https://bun.com"><img src="https://img.shields.io/badge/runtime-Bun-FBF0DF?logo=bun&logoColor=black" alt="Bun"></a>
+    <img src="https://img.shields.io/badge/rust-edition%202024-E43717?logo=rust&logoColor=white" alt="Rust edition 2024">
+  </p>
+
+  <p>
+    <a href="./RESULTS.md">Throughput results</a> ·
+    <a href="./MEMORY.md">Memory efficiency</a> ·
+    <a href="https://ossido.dev">Ossido docs</a>
+  </p>
+</div>
+
+---
+
+Both apps live in `examples/` and render **byte-for-byte identical React trees
+from identical data**, so the numbers reflect the runtime, not the workload. The
+latest results are written to [`RESULTS.md`](./RESULTS.md) (throughput/latency)
+and [`MEMORY.md`](./MEMORY.md) (memory efficiency).
 
 ## What it measures
 
