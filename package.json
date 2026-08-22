@@ -5,16 +5,16 @@
   "private": true,
   "workspaces": ["examples/*"],
   "scripts": {
-    "bench": "bun run bench/run.ts",
-    "bench:build": "bun run bench/build.ts",
-    "bench:all": "bun run bench/run.ts --build",
-    "bench:quick": "BENCH_DURATION=3 BENCH_WARMUP=1 BENCH_CONNECTIONS=20 bun run bench/run.ts",
-    "bench:memory": "bun run bench/memory.ts",
-    "bench:index": "bun run bench/index.ts"
+    "bench": "cargo run --release -p bench -- throughput",
+    "bench:build": "cargo run --release -p bench -- build",
+    "bench:all": "cargo run --release -p bench -- throughput --build",
+    "bench:quick": "BENCH_DURATION=3 BENCH_WARMUP=1 BENCH_CONNECTIONS=20 cargo run --release -p bench -- throughput",
+    "bench:memory": "cargo run --release -p bench -- memory",
+    "bench:index": "cargo run --release -p bench -- index",
+    "bench:version": "cargo run --release -p bench -- version"
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "autocannon": "^8.0.0"
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^7"

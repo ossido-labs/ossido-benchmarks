@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["examples/ossido"]
+members = ["examples/ossido", "bench"]
 
 # Production profile for the Ossido example's SSR server binary. Cargo only
 # applies `[profile.*]` from the workspace root, so this lives here (moved out

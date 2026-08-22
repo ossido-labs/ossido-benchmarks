@@ -1,0 +1,30 @@
+[package]
+name = "bench"
+version = "0.0.1"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = "bench"
+path = "src/main.rs"
+
+[dependencies]
+tokio = { version = "1.53", features = ["full"] }
+# Benchmarks only hit http://127.0.0.1, so no TLS backend is needed.
+reqwest = { version = "0.13", default-features = false, features = ["stream"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+colored = "3.1"
+clap = { version = "4", features = ["derive"] }
+indicatif = "0.17"
+async-trait = "0.1"
+hdrhistogram = "7"
+sysinfo = "0.32"
+nix = { version = "0.29", features = ["process", "signal"] }
+anyhow = "1"
+futures-util = "0.3"
+jiff = "0.2"
+
+# NOTE: the `[profile.release]` (LTO / codegen-units) lives in the workspace
+# root Cargo.toml and also applies to this crate — release builds are slow but
+# the load generator benefits from the optimization.

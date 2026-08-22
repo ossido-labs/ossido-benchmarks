@@ -1,0 +1,119 @@
+{
+  "schema": "ossido-benchmark/memory@1",
+  "generatedAt": "2026-08-22T21:11:20.106953Z",
+  "environment": {
+    "host": "Darwin 25.5.0 · aarch64",
+    "cpu": "Apple M4 Max",
+    "cores": 16,
+    "totalMemGb": 48.0
+  },
+  "versions": {
+    "ossido": "0.1.7",
+    "next": "16.3.2"
+  },
+  "load": {
+    "connections": 50,
+    "durationSec": 10,
+    "warmupSec": 3,
+    "route": "/ssr"
+  },
+  "levels": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "results": [
+    {
+      "framework": "ossido",
+      "parallelism": 1,
+      "idleRssMb": 35.4,
+      "meanRssMb": 246.4,
+      "peakRssMb": 267.8,
+      "rps": 68.59325201330059,
+      "reqPerMb": 0.28
+    },
+    {
+      "framework": "ossido",
+      "parallelism": 2,
+      "idleRssMb": 40.6,
+      "meanRssMb": 645.6,
+      "peakRssMb": 946.2,
+      "rps": 3458.2965198144843,
+      "reqPerMb": 5.36
+    },
+    {
+      "framework": "ossido",
+      "parallelism": 4,
+      "idleRssMb": 49.3,
+      "meanRssMb": 978.2,
+      "peakRssMb": 1586.6,
+      "rps": 5628.208979928727,
+      "reqPerMb": 5.75
+    },
+    {
+      "framework": "ossido",
+      "parallelism": 8,
+      "idleRssMb": 67.9,
+      "meanRssMb": 1979.1,
+      "peakRssMb": 2750.7,
+      "rps": 9160.563393959059,
+      "reqPerMb": 4.63
+    },
+    {
+      "framework": "ossido",
+      "parallelism": 16,
+      "idleRssMb": 110.4,
+      "meanRssMb": 2095.4,
+      "peakRssMb": 4052.5,
+      "rps": 9182.91719669265,
+      "reqPerMb": 4.38
+    },
+    {
+      "framework": "next",
+      "parallelism": 1,
+      "idleRssMb": 116.5,
+      "meanRssMb": 492.0,
+      "peakRssMb": 517.6,
+      "rps": 597.4647429642389,
+      "reqPerMb": 1.21
+    },
+    {
+      "framework": "next",
+      "parallelism": 2,
+      "idleRssMb": 294.4,
+      "meanRssMb": 959.0,
+      "peakRssMb": 1034.5,
+      "rps": 1129.2261221111266,
+      "reqPerMb": 1.18
+    },
+    {
+      "framework": "next",
+      "parallelism": 4,
+      "idleRssMb": 510.6,
+      "meanRssMb": 1759.2,
+      "peakRssMb": 1861.9,
+      "rps": 2137.699017804986,
+      "reqPerMb": 1.22
+    },
+    {
+      "framework": "next",
+      "parallelism": 8,
+      "idleRssMb": 942.0,
+      "meanRssMb": 3566.0,
+      "peakRssMb": 3757.5,
+      "rps": 3871.054411205285,
+      "reqPerMb": 1.09
+    },
+    {
+      "framework": "next",
+      "parallelism": 16,
+      "idleRssMb": 1811.8,
+      "meanRssMb": 6220.5,
+      "peakRssMb": 6923.0,
+      "rps": 3858.1320269072608,
+      "reqPerMb": 0.62
+    }
+  ]
+}
