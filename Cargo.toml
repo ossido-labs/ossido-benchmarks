@@ -1,0 +1,12 @@
+[workspace]
+resolver = "3"
+members = ["examples/ossido"]
+
+# Production profile for the Ossido example's SSR server binary. Cargo only
+# applies `[profile.*]` from the workspace root, so this lives here (moved out
+# of examples/ossido/Cargo.toml). Trade compile time for run-time performance.
+# No `panic = "abort"` — Ossido's SSR render pool relies on unwinding to recover
+# from a failed render.
+[profile.release]
+lto = "fat"
+codegen-units = 1

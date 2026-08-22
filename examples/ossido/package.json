@@ -1,0 +1,30 @@
+{
+  "name": "ossido",
+  "description": "Basic ossido application with tailwind",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "ossido dev",
+    "build": "ossido build",
+    "build:static": "ossido build --static",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.3.3",
+    "@ossido-labs/ossido": "0.1.8-beta.20260822040659Z",
+    "@ossido-labs/ossido-mdx": "0.1.8-beta.20260822040659Z"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "1.76.0",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@ossido-labs/ossido-cli": "0.1.8-beta.20260822040659Z",
+    "@ossido-labs/ossido-eslint-plugin": "0.1.8-beta.20260822040659Z",
+    "oxlint": "1.76.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.0"
+  }
+}
