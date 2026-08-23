@@ -1512,9 +1512,9 @@ dependencies = [
 
 [[package]]
 name = "ossido"
-version = "0.1.7"
+version = "0.1.8-beta.20260823015357Z"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5faac45e86eb8f8e7d9557c770df56a15449ae90dedbec19afdaa9f001b5655d"
+checksum = "dccf999ed37cdea65e0194950d95bf0d880e4d99365e631de48de94740958440"
 dependencies = [
  "axum",
  "axum-extra",
@@ -1554,9 +1554,9 @@ dependencies = [
 
 [[package]]
 name = "ossido_internal"
-version = "0.1.7"
+version = "0.1.8-beta.20260823015357Z"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1c7ea6b1a516e6c0da88695117fe8775fa5f0f70810a4b5942b54fa1e848d0f3"
+checksum = "8b0610b8f8351a71e6789e409f7677f3c6889be7b507cd00206d7fb0c8e618e4"
 dependencies = [
  "colored",
  "jiff",
@@ -1566,9 +1566,9 @@ dependencies = [
 
 [[package]]
 name = "ossido_macros"
-version = "0.1.7"
+version = "0.1.8-beta.20260823015357Z"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be28bfd331e14b00826e7c1498acb7d2f41a13df79ea0ef627fdc8e5dfc536d4"
+checksum = "914fa547973f93d3fbc1d958dc366a435a27e953be54d752c738d51f8a6c15c6"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1577,11 +1577,14 @@ dependencies = [
 
 [[package]]
 name = "ossido_ssr"
-version = "0.1.7"
+version = "0.1.8-beta.20260823015357Z"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bbc68f488565cbbf9fc663e11bf97bb11de8106116fa8415e210748aea3213f8"
+checksum = "ddfc5da2b87904ec09820fc801d82de3f5dbb973621319327c913aad3aba64db"
 dependencies = [
+ "encoding_rs",
+ "form_urlencoded",
  "rustc-hash",
+ "simdutf8",
  "v8",
 ]
 
@@ -2095,6 +2098,12 @@ name = "simd-adler32"
 version = "0.3.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3a219298ac11a56ea9a6d2120044824d6f01aeb034955e7af7bc16858527deea"
+
+[[package]]
+name = "simdutf8"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e3a9fe34e3e7a50316060351f37187a3f546bce95496156754b601a5fa71b76e"
 
 [[package]]
 name = "slab"

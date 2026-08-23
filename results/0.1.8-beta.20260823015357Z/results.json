@@ -1,0 +1,237 @@
+{
+  "schema": "ossido-benchmark/results@1",
+  "generatedAt": "2026-08-23T02:06:57.697118Z",
+  "environment": {
+    "host": "Darwin 25.5.0 · aarch64",
+    "cpu": "Apple M4 Max",
+    "cores": 16,
+    "totalMemGb": 48.0
+  },
+  "versions": {
+    "ossido": "0.1.8-beta.20260823015357Z",
+    "next": "16.3.2"
+  },
+  "load": {
+    "connections": 50,
+    "durationSec": 10,
+    "warmupSec": 3
+  },
+  "scenarios": [
+    {
+      "key": "ssr",
+      "title": "SSR — catalogue",
+      "path": "/ssr",
+      "note": "60 product cards rendered per request"
+    },
+    {
+      "key": "heavy",
+      "title": "SSR — heavy table",
+      "path": "/heavy",
+      "note": "5000-row table, CPU-bound render"
+    },
+    {
+      "key": "api",
+      "title": "JSON API",
+      "path": "/api/bench",
+      "note": "100-item JSON payload (Rust vs Node)"
+    },
+    {
+      "key": "stream",
+      "title": "Streaming SSR",
+      "path": "/stream",
+      "note": "shell flushed first, 3000-row table streamed after"
+    }
+  ],
+  "results": [
+    {
+      "framework": "ossido",
+      "mode": "single",
+      "threads": 1,
+      "scenario": "ssr",
+      "connections": 50,
+      "rps": 2066.5379485897815,
+      "latencyMeanMs": 24.159749541461515,
+      "latencyP50Ms": 24.095,
+      "latencyP99Ms": 25.791,
+      "throughputMbps": 77.19639916063475,
+      "errors": 0
+    },
+    {
+      "framework": "ossido",
+      "mode": "single",
+      "threads": 1,
+      "scenario": "heavy",
+      "connections": 32,
+      "rps": 25.534668922281405,
+      "latencyMeanMs": 1184.4385783972125,
+      "latencyP50Ms": 1244.159,
+      "latencyP99Ms": 1297.407,
+      "throughputMbps": 69.64975349623673,
+      "errors": 0
+    },
+    {
+      "framework": "ossido",
+      "mode": "single",
+      "threads": 1,
+      "scenario": "api",
+      "connections": 50,
+      "rps": 162653.08940268907,
+      "latencyMeanMs": 0.306653038817364,
+      "latencyP50Ms": 0.29,
+      "latencyP99Ms": 0.736,
+      "throughputMbps": 1699.0082628513844,
+      "errors": 0
+    },
+    {
+      "framework": "ossido",
+      "mode": "multi",
+      "threads": 16,
+      "scenario": "ssr",
+      "connections": 50,
+      "rps": 9216.951983331583,
+      "latencyMeanMs": 5.4223565913330205,
+      "latencyP50Ms": 4.979,
+      "latencyP99Ms": 14.007,
+      "throughputMbps": 344.30313986501517,
+      "errors": 0
+    },
+    {
+      "framework": "ossido",
+      "mode": "multi",
+      "threads": 16,
+      "scenario": "heavy",
+      "connections": 32,
+      "rps": 110.47549725729628,
+      "latencyMeanMs": 287.15044247787614,
+      "latencyP50Ms": 286.719,
+      "latencyP99Ms": 394.751,
+      "throughputMbps": 301.3389824933507,
+      "errors": 0
+    },
+    {
+      "framework": "ossido",
+      "mode": "multi",
+      "threads": 16,
+      "scenario": "api",
+      "connections": 50,
+      "rps": 158221.7331783273,
+      "latencyMeanMs": 0.3152596406876833,
+      "latencyP50Ms": 0.298,
+      "latencyP99Ms": 0.777,
+      "throughputMbps": 1652.7201113722028,
+      "errors": 0
+    },
+    {
+      "framework": "next",
+      "mode": "single",
+      "threads": 1,
+      "scenario": "ssr",
+      "connections": 50,
+      "rps": 607.2259337538749,
+      "latencyMeanMs": 82.27562089356117,
+      "latencyP50Ms": 80.767,
+      "latencyP99Ms": 99.455,
+      "throughputMbps": 63.36465994963549,
+      "errors": 0
+    },
+    {
+      "framework": "next",
+      "mode": "single",
+      "threads": 1,
+      "scenario": "heavy",
+      "connections": 32,
+      "rps": 8.466169267945709,
+      "latencyMeanMs": 3672.399999999999,
+      "latencyP50Ms": 2689.023,
+      "latencyP99Ms": 11337.727,
+      "throughputMbps": 62.76054530628946,
+      "errors": 0
+    },
+    {
+      "framework": "next",
+      "mode": "single",
+      "threads": 1,
+      "scenario": "api",
+      "connections": 50,
+      "rps": 3476.20894550165,
+      "latencyMeanMs": 7.8816456129254755,
+      "latencyP50Ms": 0.95,
+      "latencyP99Ms": 28.463,
+      "throughputMbps": 36.29780935697323,
+      "errors": 24378
+    },
+    {
+      "framework": "next",
+      "mode": "multi",
+      "threads": 16,
+      "scenario": "ssr",
+      "connections": 50,
+      "rps": 97.93450956773918,
+      "latencyMeanMs": 35.09492857142857,
+      "latencyP50Ms": 16.495,
+      "latencyP99Ms": 398.079,
+      "throughputMbps": 10.219568287755987,
+      "errors": 50376
+    },
+    {
+      "framework": "next",
+      "mode": "multi",
+      "threads": 16,
+      "scenario": "heavy",
+      "connections": 32,
+      "rps": 73.10414222516944,
+      "latencyMeanMs": 433.7262056074769,
+      "latencyP50Ms": 431.359,
+      "latencyP99Ms": 658.943,
+      "throughputMbps": 541.9281950304608,
+      "errors": 0
+    },
+    {
+      "framework": "next",
+      "mode": "multi",
+      "threads": 16,
+      "scenario": "api",
+      "connections": 50,
+      "rps": 527.5811387703322,
+      "latencyMeanMs": 3.8699969691229392,
+      "latencyP50Ms": 1.125,
+      "latencyP99Ms": 48.127,
+      "throughputMbps": 5.508886230846755,
+      "errors": 49427
+    }
+  ],
+  "streaming": [
+    {
+      "framework": "ossido",
+      "mode": "single",
+      "threads": 1,
+      "ttfbMs": 21.447146,
+      "totalMs": 28.692833,
+      "bytes": 1716965
+    },
+    {
+      "framework": "ossido",
+      "mode": "multi",
+      "threads": 16,
+      "ttfbMs": 21.232312,
+      "totalMs": 28.891104,
+      "bytes": 1716965
+    },
+    {
+      "framework": "next",
+      "mode": "single",
+      "threads": 1,
+      "ttfbMs": 76.33179150000001,
+      "totalMs": 77.445854,
+      "bytes": 4665967
+    },
+    {
+      "framework": "next",
+      "mode": "multi",
+      "threads": 16,
+      "ttfbMs": 74.6288335,
+      "totalMs": 75.46033299999999,
+      "bytes": 4665967
+    }
+  ]
+}

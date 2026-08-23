@@ -33,6 +33,7 @@ JSON (`results.json`, `memory.json`).
 <!-- BENCH_TABLE:START -->
 | Ossido version | Next version | Throughput result | Memory result |
 | --- | --- | --- | --- |
+| `0.1.8-beta.20260823015357Z` | `16.3.2` | [RESULTS.md](./results/0.1.8-beta.20260823015357Z/RESULTS.md) · [json](./results/0.1.8-beta.20260823015357Z/results.json) | [MEMORY.md](./results/0.1.8-beta.20260823015357Z/MEMORY.md) · [json](./results/0.1.8-beta.20260823015357Z/memory.json) |
 | `0.1.7` | `16.3.2` | [RESULTS.md](./results/0.1.7/RESULTS.md) · [json](./results/0.1.7/results.json) | [MEMORY.md](./results/0.1.7/MEMORY.md) · [json](./results/0.1.7/memory.json) |
 | `0.1.8-beta.20260822040659Z` | `16.3.2` | [RESULTS.md](./results/0.1.8-beta.20260822040659Z/RESULTS.md) · [json](./results/0.1.8-beta.20260822040659Z/results.json) | [MEMORY.md](./results/0.1.8-beta.20260822040659Z/MEMORY.md) · [json](./results/0.1.8-beta.20260822040659Z/memory.json) |
 <!-- BENCH_TABLE:END -->

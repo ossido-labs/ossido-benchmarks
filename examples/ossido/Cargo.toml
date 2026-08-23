@@ -8,7 +8,7 @@ name = "ossido"
 path = ".ossido/main.rs"
 
 [dependencies]
-ossido = "0.1.7"
+ossido = "0.1.8-beta.20260823015357Z"
 serde = { version = "1.0.202", features = ["derive"] }
 tower-http = { version = "0.6.8", features = ["full"] }
 
